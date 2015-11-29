@@ -27,14 +27,19 @@ NOTES:
 import bisect
 
 
-def get_cumsum(int_array, m):
+def get_cumsum(int_array):
     cumsum_arr, current_sum = [], 0
     for el in int_array:
         current_sum += el
-        current_sum %= m
         cumsum_arr.append(current_sum)
+    print 'cumsum_arr: {}'.format(cumsum_arr)
     return cumsum_arr
 
+def apply_modulo_to_list(int_array, m):
+    for i in range(len(int_array)):
+        int_array[i] %= m
+    print 'int_array_modulo: {}'.format(int_array)
+    return int_array
 
 class BinaryTree(object):
     '''
@@ -42,6 +47,7 @@ class BinaryTree(object):
     '''
     def __init__(self, m, cumsum_arr):
         self.m = m
+        self.cumsum_arr = cumsum_arr
         self.cumsum_sorted_arr = sorted(cumsum_arr)
 
     def lower_bound(self, partial_sum):
@@ -53,7 +59,9 @@ class BinaryTree(object):
             return 0
 
     def get_best_span_sum_for_partial_sum(self, partial_sum):
-        return (partial_sum - self.lower_bound(partial_sum)) % self.m
+        best_span_sum = (partial_sum - self.lower_bound(partial_sum)) % self.m
+        print 'partial_sum: {}, best_span_sum: {}'.format(partial_sum, best_span_sum)
+        return best_span_sum
 
 
 def main():
@@ -64,15 +72,15 @@ def main():
         int_array = map(int,raw_input().strip().split(' '))
 
         # create the cumsum array
-        cumsum_arr = get_cumsum(int_array, m)
+        cumsum_mod_arr = apply_modulo_to_list(get_cumsum(int_array), m)
 
         # create a binary tree for O(log(n)) searching
-        binary_tree = BinaryTree(m, cumsum_arr)
+        binary_tree = BinaryTree(m, cumsum_mod_arr)
     
         # create a var for the final answer
         maxsum = int_array[0] % m
 
-        for partial_sum in cumsum_arr:
+        for partial_sum in cumsum_mod_arr:
             # search for the best matching partial sum, the smallest number bigger than the partial_sum
             max_at_i = binary_tree.get_best_span_sum_for_partial_sum(partial_sum)
             maxsum = max(maxsum, max_at_i)
