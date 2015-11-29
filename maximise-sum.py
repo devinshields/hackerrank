@@ -38,7 +38,7 @@ def get_cumsum(int_array):
 def apply_modulo_to_list(int_array, m):
     for i in range(len(int_array)):
         int_array[i] %= m
-    print 'int_array_modulo: {}'.format(int_array)
+    print 'int_array_modulo: {}\n'.format(int_array)
     return int_array
 
 class BinaryTree(object):
@@ -49,20 +49,23 @@ class BinaryTree(object):
         self.m = m
         self.cumsum_arr = cumsum_arr
         self.cumsum_sorted_arr = sorted(cumsum_arr)
+        print 'cumsum_sorted_arr: {}'.format(self.cumsum_sorted_arr)
+
 
     def lower_bound(self, partial_sum):
         ''' Find rightmost value less than or equal to partial_sum '''
         i = bisect.bisect_right(self.cumsum_sorted_arr, partial_sum)
+        print '\t\tlower_bound_i: {}'.format(i)
         if i:
             bound = self.cumsum_sorted_arr[i-1]
-            print '\ti: {}, lower_bound: {}'.format(i, bound)
             return bound
         else:
             return 0
 
     def get_best_span_sum_for_partial_sum(self, partial_sum):
-        best_span_sum = (partial_sum - self.lower_bound(partial_sum)) % self.m
-        print '\tpartial_sum: {}, best_span_sum: {}'.format(partial_sum, best_span_sum)
+        low_bound = self.lower_bound(partial_sum)
+        best_span_sum = (partial_sum - low_bound) % self.m
+        print '\tpartial_sum: {}, low_bound: {}, best_span_sum: {}'.format(partial_sum, low_bound, best_span_sum)
         return best_span_sum
 
 
@@ -82,12 +85,13 @@ def main():
         # create a var for the final answer
         maxsum = int_array[0] % m
 
-        for partial_sum in cumsum_mod_arr:
+        for i, partial_sum in enumerate(cumsum_mod_arr):
             # search for the best matching partial sum,
             # the smallest number bigger than the partial_sum
             max_at_i = binary_tree.get_best_span_sum_for_partial_sum(partial_sum)
-            print
             maxsum = max(maxsum, max_at_i)
+            print 'i: {}, max_at_i: {}\n'.format(i, max_at_i)
+
         
         print maxsum
 
