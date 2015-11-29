@@ -23,16 +23,8 @@ NOTES:
     http://cplusplus-coding.blogspot.com/2015/07/maximise-sum.html
     http://stackoverflow.com/questions/31113993/maximum-subarray-sum-modulo-m
 
-'''
+More Notes:
 
-
-t = int(raw_input().strip())
-
-for a0 in xrange(t):
-    n, m = map(int, raw_input().strip().split(' '))
-
-    arr = map(int,raw_input().strip().split(' '))
-    
     # note: the solution indices (i, j) are two dimensional,
     # but the output value is one dimensional (the max subset, modulo M).
     # The dynamic programming insight here is that:
@@ -52,35 +44,67 @@ for a0 in xrange(t):
     # me cringes. The example code I've seen is unreadable. I'll think about reformulating...
     #
 
+'''
 
-    # init the answer tracker 
-    max_mod_sum = arr[0] % m
 
-    # init the cumulative sum array and the binary search tree.
-    # pad the input with zeros (for simpler array boundry logic)
-    mod_cum_sum_arr = [0]
-    binary_tree     = [0]                   # TODO: get a tree class, then create  one here.
-    arr             = [0] + arr + [0]
+#
+# Binary search tree:
+#
+#   https://docs.python.org/2/library/bisect.html#searching-sorted-lists
+#
 
-    # skip the zero pad
-    arr_enumerator = enumerate(arr)
-    arr_enumerator.next()
 
-    # loop over the array
-    for i, el in arr_enumerator:
-        # get the current cumulative sum, then update the cumsum sum array
-        mod_cum_sum_at_i = (mod_cum_sum_arr[-1] + arr[i]) % m
-        mod_cum_sum_arr.append(mod_cum_sum_at_i)
+def get_cumsum(int_array, m):
+    cumsum_arr, current_sum = [], 0
+    for el in int_array:
+        current_sum += el
+        current_sum %= m
+        cumsum_arr.append(current_sum)
+    return cumsum_arr
 
-        # update the binary search tree
 
-        # create a candidate for the largest subarray-sum modulo M.
-        # the simplest candidate is of course the full cumsum so far (a.k.a.: sum(arr[:i]) )
-        max_ending_at_i = mod_cum_sum_at_i
+def get_binary_search_tree(cumsum_arr):
+    # TODO
 
-        # search for better options, query the tree
-        mod_cum_sum
+    prev_sum := find_next(T, S[i])
+    if prev_sum is found:
+        max_ending_at_i := (S[i] - prev_sum) % m
+    max_mod_sum = max(max_mod_sum, max_ending_at_i)
+    return TODO
+
+
+def main():
+    t = int(raw_input().strip())
+    for a0 in xrange(t):
+        # read in each test case
+        n, m = map(int, raw_input().strip().split(' '))
+        int_array = map(int,raw_input().strip().split(' '))
+
+        # create the cumsum array
+        cumsum_arr = get_cumsum(int_array)
+
+        # create a binary tree for O(log(n)) searching
+        binary_tree = get_binary_search_tree(cumsum_arr)
+    
+        # create temp variable for the final answer, any valid candidate solution will do.
+        maxsum = int_array[0] % m
+
+        # for each element in the cumsum array, search for the corresponding
+        # element that maximizes:
+        #         sum(int_array[i:j]) % m
+        for partial_sum in cumsum_arr:
+            # search for the best matching partial sum
+            binary_tree.search()
+
+            #
+            prev_sum = find_next(T, S[i])
+            if prev_sum is found:
+                max_ending_at_i = (S[i] - prev_sum) % m
+            max_mod_sum = max(max_mod_sum, max_ending_at_i)
         
+        print
 
-    print
+
+if __name__ == '__main__':
+  main()
 
