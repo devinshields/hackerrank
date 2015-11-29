@@ -54,13 +54,15 @@ class BinaryTree(object):
         ''' Find rightmost value less than or equal to partial_sum '''
         i = bisect.bisect_right(self.cumsum_sorted_arr, partial_sum)
         if i:
-            return self.cumsum_sorted_arr[i-1]
+            bound = self.cumsum_sorted_arr[i-1]
+            print '\ti: {}, lower_bound: {}'.format(i, bound)
+            return bound
         else:
             return 0
 
     def get_best_span_sum_for_partial_sum(self, partial_sum):
         best_span_sum = (partial_sum - self.lower_bound(partial_sum)) % self.m
-        print 'partial_sum: {}, best_span_sum: {}'.format(partial_sum, best_span_sum)
+        print '\tpartial_sum: {}, best_span_sum: {}'.format(partial_sum, best_span_sum)
         return best_span_sum
 
 
@@ -81,8 +83,10 @@ def main():
         maxsum = int_array[0] % m
 
         for partial_sum in cumsum_mod_arr:
-            # search for the best matching partial sum, the smallest number bigger than the partial_sum
+            # search for the best matching partial sum,
+            # the smallest number bigger than the partial_sum
             max_at_i = binary_tree.get_best_span_sum_for_partial_sum(partial_sum)
+            print
             maxsum = max(maxsum, max_at_i)
         
         print maxsum
